@@ -267,7 +267,96 @@ function home() {
   return `<section class="hero"><div class="container hero-inner"><div class="row align-items-center"><div class="hero-copy col-12 col-md-7 col-lg-7"><p class="eyebrow">ALOJAMIENTO PARA TU VIDA UNIVERSITARIA</p><h1>Encuentra tu cuarto<br> ideal cerca de la UTTT.</h1><p>Compara cuartos y departamentos según tu presupuesto, ubicación y lo que necesitas para estudiar y vivir.</p><div class="hero-signals"><span>${icon("book")}Estudiantes y maestros</span><span>${icon("home")}Un espacio para cada etapa</span></div></div><div class="hero-visual col-12 col-md-5 col-lg-5"><div class="hero-photo">${photo({ demo: 0 }, "Habitación ilustrativa con escritorio y luz natural")}<div class="photo-overlay">${icon("pin")}<span><strong>Tu espacio, más cerca.</strong><small>Explora y encuentra lo que va contigo.</small></span></div></div></div></div></div></section><form class="container search-card" data-form="search"><p class="eyebrow">¿CÓMO ES TU CUARTO IDEAL?</p><div class="search-fields">${field("Rango de precio", "max", priceSelect())}${field("Tamaño", "area", `<select name="area" aria-label="Superficie mínima"><option value="">Cualquiera</option><option value="15">Desde 15 m²</option><option value="20">Desde 20 m²</option><option value="30">Desde 30 m²</option></select>`)}${field("Ubicación / gustos", "q", `<input name="q" aria-label="Buscar ubicación o característica" placeholder="Cerca de la universidad" value="${esc(state.filters.q)}">`)}${field("Características", "feature", `<select name="feature" aria-label="Características"><option value="">Mascotas / amueblado</option value="Mascotas">Acepta mascotas</option value="Amueblado">Amueblado</option value="Wi-Fi">Wi-Fi</option></select>`)}<button class="btn" type="submit">${icon("search")}Buscar</button></div></form><section class="container catalog" id="catalogo"><div class="section-top"><div><h2>Un lugar que se sienta tuyo</h2><p>Explora el catálogo y compara las opciones que más te interesen.</p></div>${btn("Ver mapa", "#/buscar?mapa=1", "outline", "map")}</div>${filterChips()}<p class="catalog-note">Catálogo de demostración · los precios, fotografías y características marcados «Ejemplo» son ilustrativos.</p><div class="cards row">${cards(list.slice(0, 6))}</div><div class="center">${btn("Explorar más espacios", "#/buscar", "outline catalog-more", "arrow")}</div></section><section class="map-intro"><div class="container map-intro-grid"><div class="map-copy"><p class="eyebrow">TU PRÓXIMA ETAPA, MEJOR UBICADA</p><h2>Elige también<br>por ubicación.</h2><p>Consulta el mapa y compara opciones en un mismo lugar. La ubicación y los servicios te ayudan a elegir un espacio que se adapte a tu rutina.</p>${btn("Explorar en el mapa", "#/buscar?mapa=1", "navy", "map")}</div>${mapPanel()}</div></section>${aboutContent()}${faq()}<section class="container cta" id="contacto"><div><h2>¿Tienes un espacio en renta?</h2><p>Preséntalo a estudiantes y maestros. Agrega fotos, características y los datos de tu inmueble.</p>${btn("Quiero publicar", "#/publicar", "", "arrow")}</div><div><h3>¿Necesitas orientación?</h3>${contactForm()}</div></section>`;
 }
 function contactPage() {
-  return `<section class="container page-shell narrow"><h1>Hablemos de tu próxima etapa</h1><p class="page-description">Déjanos tu correo para solicitar orientación sobre Mi Cuarto UT.</p><div class="cta" style="display:block;width:100%;margin-inline:0">${contactForm()}</div></section>`;
+  return `<section class="container page-shell contact-page"><p class="breadcrumb"><a href="index.html">Inicio</a> / Contacto</p><div class="row g-4"><aside class="contact-intro col-12 col-md-4 col-lg-4"><p class="eyebrow">ESTAMOS PARA ORIENTARTE</p><h1>Hablemos de tu próxima etapa.</h1><p>Cuéntanos qué necesitas para buscar tu espacio o presentar tu inmueble.</p><div class="contact-illustration">${photo({demo: 2}, "Habitación ilustrativa con espacio de estudio")}</div><a href="mailto:micuartout@gmail.com">micuartout@gmail.com</a><p class="small-text muted">La orientación no confirma la disponibilidad de un alojamiento.</p></aside><article class="col-12 col-md-8 col-lg-8"><form data-form="orientation" class="orientation-form" novalidate><h2>¿En qué podemos ayudarte?</h2><p class="muted">Los campos con * son obligatorios.</p><div class="row g-3"><label class="form-control col-12 col-sm-6 col-md-6 col-lg-6" for="orientation-name">Nombre completo *<input id="orientation-name" name="name" autocomplete="name" required minlength="2" maxlength="100" aria-describedby="error-name"><small id="error-name" class="field-error" data-error="name"></small></label><label class="form-control col-12 col-sm-6 col-md-6 col-lg-6" for="orientation-email">Correo electrónico *<input id="orientation-email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="nombre@correo.com" aria-describedby="error-email"><small id="error-email" class="field-error" data-error="email"></small></label><label class="form-control col-12 col-sm-6 col-md-6 col-lg-6" for="orientation-role">Tu perfil *<select id="orientation-role" name="role" required aria-describedby="error-role"><option value="">Selecciona tu perfil</option><option value="estudiante">Estudiante</option><option value="maestro">Maestro</option><option value="rentador">Rentador</option></select><small id="error-role" class="field-error" data-error="role"></small></label><label class="form-control col-12 col-sm-6 col-md-6 col-lg-6" for="orientation-topic">Motivo de consulta *<select id="orientation-topic" name="topic" required aria-describedby="error-topic"><option value="">Selecciona una opción</option><option value="buscar">Busco alojamiento</option><option value="publicar">Quiero publicar un inmueble</option><option value="otro">Otra consulta</option></select><small id="error-topic" class="field-error" data-error="topic"></small></label><label class="form-control col-12" data-conditional="budget" hidden>Presupuesto mensual máximo (MXN) *<input name="budget" type="number" min="500" max="100000" step="50" disabled aria-describedby="error-budget" placeholder="Ej. 3000"><small id="error-budget" class="field-error" data-error="budget"></small></label><label class="form-control col-12" data-conditional="zone" hidden>Zona o localidad del inmueble *<input name="zone" minlength="3" maxlength="160" disabled aria-describedby="error-zone" placeholder="Indica la zona de tu inmueble"><small id="error-zone" class="field-error" data-error="zone"></small></label><fieldset class="contact-preference col-12"><legend>¿Cómo prefieres que te contacten? *</legend><div class="d-flex align-items-center flex-wrap gap-3"><label class="check-option"><input type="radio" name="channel" value="email" checked required> Por correo</label><label class="check-option"><input type="radio" name="channel" value="phone" required> Por teléfono</label></div></fieldset><label class="form-control col-12 col-sm-6 col-md-6 col-lg-6" data-conditional="phone" hidden>Teléfono de contacto *<input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" disabled aria-describedby="error-phone" placeholder="10 dígitos o +52 y 10 dígitos"><small id="error-phone" class="field-error" data-error="phone"></small></label><label class="form-control col-12 col-sm-6 col-md-6 col-lg-6">Fecha preferida (opcional)<input name="date" type="date" aria-describedby="error-date"><small id="error-date" class="field-error" data-error="date"></small></label><label class="form-control col-12" for="orientation-message">Cuéntanos lo que necesitas *<textarea id="orientation-message" name="message" required minlength="20" maxlength="1500" rows="5" aria-describedby="error-message message-count" placeholder="Describe el tipo de espacio, tus dudas o las características de tu inmueble."></textarea><small id="error-message" class="field-error" data-error="message"></small><small id="message-count" class="muted">0 / 1500 caracteres</small></label><label class="consent col-12"><input name="consent" type="checkbox" required aria-describedby="error-consent"><span>Acepto el uso de mis datos para atender esta consulta. <a href="privacidad.html">Aviso de privacidad</a>.<small id="error-consent" class="field-error" data-error="consent"></small></span></label></div><p class="form-feedback" role="alert" data-form-feedback></p><button class="btn" type="submit">Revisar solicitud ${icon("arrow")}</button><p class="small-text muted section-space">Revisa tu solicitud y elige enviarla desde tu aplicación de correo.</p><section class="request-result" data-request-result role="status" tabindex="-1" hidden></section></form></article></div></section>`;
+}
+function localDate() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+function initializeOrientation() {
+  const form = $('[data-form="orientation"]');
+  if (!form) return;
+  form.elements.date.min = localDate();
+  updateConditionalFields(form);
+}
+function updateConditionalFields(form) {
+  const active = {
+    budget: form.elements.topic.value === "buscar",
+    zone: form.elements.topic.value === "publicar",
+    phone: form.elements.channel.value === "phone"
+  };
+  for (const [name, visible] of Object.entries(active)) {
+    const field = $(`[data-conditional="${name}"]`, form);
+    const input = $("input", field);
+    field.hidden = !visible;
+    field.classList.toggle("is-visible", visible);
+    input.disabled = !visible;
+    input.required = visible;
+    if (!visible) {
+      input.setCustomValidity("");
+      input.classList.remove("is-invalid");
+      input.removeAttribute("aria-invalid");
+      $(`[data-error="${name}"]`, form).textContent = "";
+    }
+  }
+}
+function validateOrientationField(input, form) {
+  if (input.disabled || !input.name) return true;
+  input.setCustomValidity("");
+  const value = input.value.trim();
+  if (input.required && !value && input.type !== "checkbox" && input.type !== "radio")
+    input.setCustomValidity("Completa este campo sin usar solamente espacios.");
+  if (input.name === "name" && value && !/^[\p{L}\p{M}][\p{L}\p{M} '.-]{1,99}$/u.test(value))
+    input.setCustomValidity("Escribe tu nombre con letras, sin números.");
+  if (input.name === "email" && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+    input.setCustomValidity("Escribe un correo completo, por ejemplo nombre@correo.com.");
+  if (input.name === "phone" && value && !/^(?:52)?\d{10}$/.test(value.replace(/[+ ()-]/g, "")))
+    input.setCustomValidity("Escribe 10 dígitos; puedes incluir el prefijo +52.");
+  if (input.name === "message" && value.length < 20)
+    input.setCustomValidity("Escribe al menos 20 caracteres que describan tu consulta.");
+  if (input.name === "zone" && value && value.length < 3)
+    input.setCustomValidity("Escribe una zona o localidad de al menos 3 caracteres.");
+  if (input.name === "date" && value && value < localDate())
+    input.setCustomValidity("Selecciona hoy o una fecha posterior.");
+  const valid = input.checkValidity();
+  input.classList.toggle("is-invalid", !valid);
+  if (valid) input.removeAttribute("aria-invalid");
+  else input.setAttribute("aria-invalid", "true");
+  const error = $(`[data-error="${input.name}"]`, form);
+  if (error) error.textContent = valid ? "" : input.validity.valueMissing
+    ? input.type === "checkbox" ? "Acepta el aviso para continuar." : "Completa este campo."
+    : input.validationMessage;
+  return valid;
+}
+function reviewOrientation(form) {
+  updateConditionalFields(form);
+  form.classList.add("was-validated");
+  const fields = [...form.querySelectorAll("input, select, textarea")];
+  const invalid = fields.filter(input => !validateOrientationField(input, form));
+  const feedback = $("[data-form-feedback]", form);
+  const result = $("[data-request-result]", form);
+  result.hidden = true;
+  if (invalid.length) {
+    feedback.textContent = `Revisa ${invalid.length === 1 ? "el campo marcado" : "los " + invalid.length + " campos marcados"} para continuar.`;
+    invalid[0].focus();
+    return;
+  }
+  feedback.textContent = "";
+  const data = new FormData(form);
+  const topic = form.elements.topic.selectedOptions[0].textContent;
+  const phone = data.get("phone") || "";
+  const lines = ["Nombre: " + data.get("name").trim(), "Correo: " + data.get("email").trim(),
+    "Perfil: " + roles[data.get("role")], "Motivo: " + topic,
+    "Contacto preferido: " + (phone ? "Teléfono " + phone : "Correo electrónico"),
+    ...(data.get("budget") ? ["Presupuesto: " + money(data.get("budget")) + " MXN / mes"] : []),
+    ...(data.get("zone") ? ["Zona: " + data.get("zone").trim()] : []),
+    ...(data.get("date") ? ["Fecha preferida: " + data.get("date")] : []),
+    "", data.get("message").trim()];
+  const href = "mailto:micuartout@gmail.com?subject=" + encodeURIComponent("Orientación Mi Cuarto UT: " + topic)
+    + "&body=" + encodeURIComponent(lines.join("\n"));
+  result.innerHTML = `<h3>${icon("check")} Tu solicitud está lista</h3><p>Revisa tus datos antes de enviarla. Todavía no se ha enviado ningún mensaje.</p><dl><dt>Nombre</dt><dd>${esc(data.get("name").trim())}</dd><dt>Correo</dt><dd>${esc(data.get("email").trim())}</dd><dt>Consulta</dt><dd>${esc(topic)}</dd><dt>Contacto</dt><dd>${esc(phone || "Correo electrónico")}</dd></dl><p class="request-message">${esc(data.get("message").trim())}</p><a class="btn navy" href="${esc(href)}">Abrir correo para enviar ${icon("arrow")}</a>`;
+  result.hidden = false;
+  result.focus();
 }
 function aboutContent(standalone = false) {
   return `<section class="container about" id="nosotros"><${standalone ? "h1" : "h2"}>Mi Cuarto UT, pensado para tu vida universitaria.</${standalone ? "h1" : "h2"}><p>Nuestro propósito es acercar la búsqueda de alojamiento a estudiantes y maestros, y ofrecer a los rentadores un espacio para presentar sus inmuebles.</p><div class="benefits">${[
@@ -393,7 +482,7 @@ function favoritesPage() {
   return `<section class="container page-shell"><p class="breadcrumb"><a href="#/">Inicio</a> / Favoritos</p><h1>Los espacios que van contigo</h1><p class="page-description">Compara tus favoritos y vuelve a ellos cuando quieras.</p><div class="cards row">${list.length ? list.map(l => `<div class="listing-col col-12 col-sm-6 col-md-6 col-lg-4">${card(l)}</div>`).join("") : empty("Todavía no tienes favoritos", "Toca el corazón de un anuncio para guardarlo.", "Explorar espacios", "go-search")}</div></section>`;
 }
 function privacyPage() {
-  return `<article class="container page-shell narrow page-prose"><p class="breadcrumb"><a href="#/">Inicio</a> / Privacidad y términos</p><h1>Privacidad y uso de Mi Cuarto UT</h1><p>Mi Cuarto UT es un proyecto de Brian Garcia Rueda para facilitar la búsqueda y publicación de alojamiento universitario. Contacto del proyecto: <a href="https://www.instagram.com/micuartout/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Mi Cuarto UT">Instagram · @micuartout</a><a href="mailto:micuartout@gmail.com">micuartout@gmail.com</a>.</p><h2>Datos que se guardan</h2><p>Al completar tu perfil se guardan tu identificador de acceso, nombre, correo y perfil elegido. También se almacenan tus favoritos, publicaciones y las fotografías que subas. Los datos de contacto del rentador solo se entregan a usuarios que han iniciado sesión. Tu identificador de acceso permite separar tus registros de los de otras cuentas.</p><p>El formulario de orientación guarda tu correo, mensaje y un folio para atender tu solicitud. Para limitar envíos repetidos se guarda temporalmente una huella del origen y la fecha, sin mostrar tu dirección IP a otros usuarios. Los reportes de anuncios se asocian a tu cuenta para su revisión.</p><h2>Acceso y corrección</h2><p>Puedes editar tu perfil y publicaciones, quitar favoritos o retirar anuncios desde tu cuenta. Para solicitar acceso, corrección o eliminación de otros datos, escribe al correo del proyecto indicando tu solicitud. Retirar un anuncio lo oculta del catálogo; no borra automáticamente su registro de la base de datos.</p><h2>Uso del catálogo</h2><p>Los anuncios marcados «Ejemplo» contienen precios, fotografías y ubicaciones ilustrativos: no son ofertas reales. Las demás publicaciones son información proporcionada por sus rentadores; Mi Cuarto UT no ha verificado su identidad ni el inmueble. Confirma personalmente condiciones, disponibilidad, costo total y documentos antes de llegar a un acuerdo. La plataforma no cobra rentas ni administra contratos.</p><h2>Publicaciones y fotografías</h2><p>Publica únicamente espacios que tengas autorización para ofrecer y fotografías con derechos de uso. Mantén precio y disponibilidad actualizados. No publiques documentos de identidad, contraseñas, datos bancarios o información personal de terceros. Puedes reportar contenido inexacto desde la ficha.</p><h2>Almacenamiento y acceso</h2><p>Los registros se guardan en una base SQLite del servidor y las fotografías en sus archivos. Las contraseñas se conservan mediante una función criptográfica con una sal individual; no se guardan como texto legible. La sesión del navegador caduca y puede cerrarse desde tu cuenta. La conexión pública actual del servidor es temporal y necesita que el equipo permanezca encendido.</p><p class="small-text muted">Información del proyecto actualizada el 20 de octubre de 2026. Campus, localidades y cobertura definitiva de operación siguen por confirmar.</p></article>`;
+  return `<article class="container page-shell narrow page-prose"><p class="breadcrumb"><a href="#/">Inicio</a> / Privacidad y términos</p><h1>Privacidad y uso de Mi Cuarto UT</h1><p>Mi Cuarto UT es un proyecto de Brian Garcia Rueda para facilitar la búsqueda y publicación de alojamiento universitario. Contacto del proyecto: <a href="https://www.instagram.com/micuartout/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Mi Cuarto UT">Instagram · @micuartout</a><a href="mailto:micuartout@gmail.com">micuartout@gmail.com</a>.</p><h2>Datos que se guardan</h2><p>Al completar tu perfil se guardan tu identificador de acceso, nombre, correo y perfil elegido. También se almacenan tus favoritos, publicaciones y las fotografías que subas. Los datos de contacto del rentador solo se entregan a usuarios que han iniciado sesión. Tu identificador de acceso permite separar tus registros de los de otras cuentas.</p><p>El formulario completo de orientación prepara una solicitud en tu navegador y permite abrir tu aplicación de correo para enviarla; no envía ni almacena esos datos automáticamente. El formulario breve de inicio registra el correo y un folio únicamente cuando el servidor está disponible. Para limitar envíos repetidos se guarda temporalmente una huella del origen y la fecha, sin mostrar tu dirección IP a otros usuarios. Los reportes de anuncios se asocian a tu cuenta para su revisión.</p><h2>Acceso y corrección</h2><p>Puedes editar tu perfil y publicaciones, quitar favoritos o retirar anuncios desde tu cuenta. Para solicitar acceso, corrección o eliminación de otros datos, escribe al correo del proyecto indicando tu solicitud. Retirar un anuncio lo oculta del catálogo; no borra automáticamente su registro de la base de datos.</p><h2>Uso del catálogo</h2><p>Los anuncios marcados «Ejemplo» contienen precios, fotografías y ubicaciones ilustrativos: no son ofertas reales. Las demás publicaciones son información proporcionada por sus rentadores; Mi Cuarto UT no ha verificado su identidad ni el inmueble. Confirma personalmente condiciones, disponibilidad, costo total y documentos antes de llegar a un acuerdo. La plataforma no cobra rentas ni administra contratos.</p><h2>Publicaciones y fotografías</h2><p>Publica únicamente espacios que tengas autorización para ofrecer y fotografías con derechos de uso. Mantén precio y disponibilidad actualizados. No publiques documentos de identidad, contraseñas, datos bancarios o información personal de terceros. Puedes reportar contenido inexacto desde la ficha.</p><h2>Almacenamiento y acceso</h2><p>Los registros se guardan en una base SQLite del servidor y las fotografías en sus archivos. Las contraseñas se conservan mediante una función criptográfica con una sal individual; no se guardan como texto legible. La sesión del navegador caduca y puede cerrarse desde tu cuenta. La conexión pública actual del servidor es temporal y necesita que el equipo permanezca encendido.</p><p class="small-text muted">Información del proyecto actualizada el 20 de octubre de 2026. Campus, localidades y cobertura definitiva de operación siguen por confirmar.</p></article>`;
 }
 async function render() {
   const version = ++state.nav,
@@ -420,8 +509,7 @@ async function render() {
     else if (path === "/mis-publicaciones") html = await managePage();
     else if (path === "/favoritos") html = favoritesPage();
     else if (path === "/nosotros") html = aboutContent(true) + faq();
-    else if (path === "/contacto")
-      html = `<section class="container page-shell narrow"><h1>Hablemos de tu próxima etapa</h1><p class="page-description">Déjanos tu correo para solicitar orientación sobre Mi Cuarto UT.</p><div class="cta" style="display:block;width:100%;margin-inline:0">${contactForm()}</div></section>`;
+    else if (path === "/contacto") html = contactPage();
     else if (path === "/privacidad") html = privacyPage();
     else
       html = `<section class="container page-shell">${empty("Esta página no está disponible", "Puedes volver al catálogo para seguir explorando.", "Ir al catálogo", "go-search")}</section>`;
@@ -436,6 +524,7 @@ async function render() {
   $("#cabecera").innerHTML = pageLinks($("#cabecera").innerHTML);
   $("#pie").innerHTML = pageLinks($("#pie").innerHTML);
   $("#contenido").innerHTML = pageLinks($("#contenido").innerHTML);
+  initializeOrientation();
   void hydratePrivatePhotos();
   document.title =
     {
@@ -686,6 +775,12 @@ document.addEventListener("click", async (event) => {
 });
 document.addEventListener("change", async (event) => {
   const el = event.target;
+  const orientation = el.closest('[data-form="orientation"]');
+  if (orientation) {
+    if (["topic", "channel"].includes(el.name)) updateConditionalFields(orientation);
+    if (orientation.classList.contains("was-validated")) validateOrientationField(el, orientation);
+    $("[data-request-result]", orientation).hidden = true;
+  }
   if (el.matches('[data-action="sort"]')) {
     state.sort = el.value;
     await render();
@@ -729,6 +824,14 @@ document.addEventListener("change", async (event) => {
     }
   }
 });
+document.addEventListener("input", event => {
+  const form = event.target.closest('[data-form="orientation"]');
+  if (!form) return;
+  if (event.target.name === "message")
+    $("#message-count", form).textContent = `${event.target.value.length} / 1500 caracteres`;
+  $("[data-request-result]", form).hidden = true;
+  if (form.classList.contains("was-validated")) validateOrientationField(event.target, form);
+});
 document.addEventListener("submit", async (event) => {
   const form = event.target.closest("form[data-form]");
   if (!form) return;
@@ -738,7 +841,9 @@ document.addEventListener("submit", async (event) => {
   const submit = $('button[type="submit"]', form);
   if (submit) submit.disabled = true;
   try {
-    if (kind === "search") {
+    if (kind === "orientation") {
+      reviewOrientation(form);
+    } else if (kind === "search") {
       for (const name of ["q", "max", "area", "type"])
         if (data.has(name)) state.filters[name] = String(data.get(name) || "");
       if (

@@ -2749,3 +2749,32 @@ main:focus {
   .hero-inner > .row { --bs-gutter-x: 24px; }
   .cards.row { --bs-gutter-x: 24px; margin-inline: -12px; }
 }
+.contact-page > .row { --bs-gutter-x: 40px; }
+.contact-intro h1 { font-size: clamp(28px, 3vw, 38px); margin: 16px 0 20px; }
+.contact-intro > p { margin-bottom: 24px; }
+.contact-intro > a { display: inline-block; font-weight: 700; margin: 20px 0 12px; overflow-wrap: anywhere; }
+.contact-illustration { height: 225px; overflow: hidden; border-radius: 14px; }
+.orientation-form { padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: white; }
+.orientation-form > p:first-of-type { margin: 10px 0 24px; }
+.orientation-form .row { --bs-gutter-x: 20px; --bs-gutter-y: 8px; }
+.orientation-form .form-control { margin-bottom: 12px; min-width: 0; }
+.orientation-form .consent { margin-top: 16px; }
+.orientation-form textarea { resize: vertical; }
+.contact-preference { padding-bottom: 12px; border: 0; min-width: 0; }
+.contact-preference legend { float: none; width: auto; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+.orientation-form .field-error { display: block; color: #a51d2d; font-size: 12px; font-weight: 500; margin-top: 6px; }
+.form-feedback { color: #a51d2d; margin: 10px 0; }
+.orientation-form .is-invalid { border-color: #a51d2d; box-shadow: 0 0 0 1px #a51d2d; }
+.request-result { background: #eff8f5; border: 1px solid #b5dbd1; padding: 22px; border-radius: 12px; margin-top: 24px; }
+.request-result h3 { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.request-result dl { display: grid; grid-template-columns: minmax(80px, 1fr) minmax(0, 2fr); gap: 8px 16px; margin: 20px 0; }
+.request-result dd { margin: 0; overflow-wrap: anywhere; }
+.request-message { white-space: pre-wrap; overflow-wrap: anywhere; margin-bottom: 20px; }
+.guest-favorites-note { margin-bottom: 24px; }
+[hidden] { display: none !important; }
+@media (max-width: 767.98px) {
+  .contact-page > .row { --bs-gutter-x: 24px; }
+  .contact-illustration { height: 210px; }
+  .orientation-form { padding: 20px 16px; }
+  .contact-preference legend { font-size: 12px; }
+}

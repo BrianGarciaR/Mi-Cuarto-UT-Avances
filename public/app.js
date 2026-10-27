@@ -128,7 +128,7 @@ function toast(text, error = false) {
 }
 async function api(path, options = {}) {
   const response = await fetch(API_ORIGIN + "/api/" + path, {
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(8000),
     credentials: API_ORIGIN ? "omit" : "same-origin",
     ...options,
     headers: {
@@ -257,7 +257,7 @@ function filtered() {
   return list;
 }
 function faq() {
-  return `<section class="container faq-section" id="preguntas"><div><h2>Antes de empezar</h2><p>Resolvemos tus primeras dudas sobre la plataforma.</p></div><div class="faq-list"><details><summary>¿Quién puede buscar alojamiento?</summary><p>Estudiantes y maestros pueden explorar el catálogo. Elige tu perfil al crear tu cuenta para guardar tus favoritos y consultar el contacto de los anuncios publicados.</p></details><details><summary>¿Cómo veo los datos del rentador?</summary><p>Inicia sesión para consultar el contacto dentro de la ficha de un anuncio. Los ejemplos del catálogo no tienen un rentador real.</p></details><details><summary>¿Qué necesito para publicar mi espacio?</summary><p>Elige el perfil Rentador, completa las características, el precio mensual en MXN y tu contacto, y agrega al menos una fotografía. Podrás editar, pausar o retirar tu publicación desde Mi espacio.</p></details></div></section>`;
+  return `<section class="container faq-section" id="preguntas"><div><h2>Antes de empezar</h2><p>Resolvemos tus primeras dudas sobre la plataforma.</p></div><div class="faq-list"><details><summary>¿Quién puede buscar alojamiento?</summary><p>Estudiantes y maestros pueden explorar el catálogo. Guarda favoritos en tu navegador. Para consultar el contacto de los anuncios publicados, crea tu cuenta y elige tu perfil.</p></details><details><summary>¿Cómo veo los datos del rentador?</summary><p>Inicia sesión para consultar el contacto dentro de la ficha de un anuncio. Los ejemplos del catálogo no tienen un rentador real.</p></details><details><summary>¿Qué necesito para publicar mi espacio?</summary><p>Elige el perfil Rentador, completa las características, el precio mensual en MXN y tu contacto, y agrega al menos una fotografía. Podrás editar, pausar o retirar tu publicación desde Mi espacio.</p></details></div></section>`;
 }
 function contactForm() {
   return `<form data-form="contact" class="contact-form"><div class="contact-inline"><label class="sr-only" for="correo-contacto">Tu correo electrónico</label><input type="email" id="correo-contacto" name="email" required maxlength="254" placeholder="Tu correo electrónico" autocomplete="email"><button class="btn" type="submit">Contactar ${icon("arrow")}</button></div><label class="consent"><input type="checkbox" name="consent" required><span>Acepto el uso de mi correo para atender esta solicitud. <a href="#/privacidad">Aviso de privacidad</a>.</span></label><p class="small-text" data-contact-result aria-live="polite"></p></form>`;
@@ -475,22 +475,30 @@ async function managePage() {
   const { listings } = await api("listings?mine=1");
   return `<div class="dashboard">${dashboardNav("/mis-publicaciones")}<section class="dashboard-main"><div class="section-top"><div><h1>Mis publicaciones</h1><p>Actualiza, pausa o retira tus anuncios cuando lo necesites.</p></div>${btn("Publicar inmueble", "#/publicar", "", "plus")}</div><div class="manage-list">${listings.length ? listings.map((l) => `<article class="manage-row"><div class="manage-photo">${photo(mainPhoto(l), l.title)}</div><div><h2>${esc(l.title)}</h2><div class="price"><strong>${money(l.price)}</strong><span>MXN / mes</span></div><span class="chip">${{ published: "Publicada", paused: "En pausa", draft: "Borrador" }[l.status] || esc(l.status)}</span></div><div class="manage-actions">${btn("Editar", "#/publicar?editar=" + encodeURIComponent(l.id), "outline small")}<button type="button" class="btn small ${l.status === "published" ? "outline" : ""}" data-action="listing-status" data-id="${esc(l.id)}" data-status="${l.status === "published" ? "paused" : "published"}">${l.status === "published" ? "Pausar" : "Publicar"}</button><button type="button" class="btn small outline" data-action="delete-listing" data-id="${esc(l.id)}">Retirar</button></div></article>`).join("") : empty("Tu primer anuncio empieza aquí", "Publica un espacio con información clara y fotografías para que puedan conocerlo.", "Publicar inmueble", "go-publish")}</div></section></div>`;
 }
+function loadGuestFavorites() {
+  try {
+    const ids = JSON.parse(localStorage.getItem("mcut-favorites-v1") || "[]");
+    state.favorites = new Set(Array.isArray(ids) ? ids.filter(id => typeof id === "string" && /^[a-zA-Z0-9-]{1,80}$/.test(id)).slice(0, 100) : []);
+  } catch { state.favorites = new Set(); }
+}
+function saveGuestFavorites() {
+  try {
+    localStorage.setItem("mcut-favorites-v1", JSON.stringify([...state.favorites]));
+    return true;
+  } catch { return false; }
+}
 function favoritesPage() {
-  if (!state.user)
-    return `<section class="container page-shell">${empty("Guarda los espacios que te interesan", "Inicia sesión para conservar tus favoritos y consultarlos desde tu cuenta.")}<div class="center section-space">${btn("Iniciar sesión", "#/cuenta", "", "heart")}</div></section>`;
-  const list = state.listings.filter((x) => state.favorites.has(x.id));
-  return `<section class="container page-shell"><p class="breadcrumb"><a href="#/">Inicio</a> / Favoritos</p><h1>Los espacios que van contigo</h1><p class="page-description">Compara tus favoritos y vuelve a ellos cuando quieras.</p><div class="cards row">${list.length ? list.map(l => `<div class="listing-col col-12 col-sm-6 col-md-6 col-lg-4">${card(l)}</div>`).join("") : empty("Todavía no tienes favoritos", "Toca el corazón de un anuncio para guardarlo.", "Explorar espacios", "go-search")}</div></section>`;
+  const list = state.listings.filter(item => state.favorites.has(item.id));
+  return `<section class="container page-shell"><p class="breadcrumb"><a href="index.html">Inicio</a> / Favoritos</p><div class="section-top"><div><h1>Los espacios que van contigo</h1><p class="page-description">Compara tus favoritos y vuelve a ellos cuando quieras.</p></div>${!state.user && list.length ? '<button type="button" class="btn outline small" data-action="clear-favorites">Vaciar favoritos</button>' : ""}</div>${!state.user ? '<p class="notice guest-favorites-note">Tus favoritos se guardan en este navegador. <a href="cuenta.html">Inicia sesión</a> para usar los favoritos de tu cuenta.</p>' : ""}<div class="cards row">${list.length ? cards(list) : empty("Todavía no tienes favoritos", "Toca el corazón de un anuncio para guardarlo.", "Explorar espacios", "go-search")}</div></section>`;
 }
 function privacyPage() {
-  return `<article class="container page-shell narrow page-prose"><p class="breadcrumb"><a href="#/">Inicio</a> / Privacidad y términos</p><h1>Privacidad y uso de Mi Cuarto UT</h1><p>Mi Cuarto UT es un proyecto de Brian Garcia Rueda para facilitar la búsqueda y publicación de alojamiento universitario. Contacto del proyecto: <a href="https://www.instagram.com/micuartout/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Mi Cuarto UT">Instagram · @micuartout</a><a href="mailto:micuartout@gmail.com">micuartout@gmail.com</a>.</p><h2>Datos que se guardan</h2><p>Al completar tu perfil se guardan tu identificador de acceso, nombre, correo y perfil elegido. También se almacenan tus favoritos, publicaciones y las fotografías que subas. Los datos de contacto del rentador solo se entregan a usuarios que han iniciado sesión. Tu identificador de acceso permite separar tus registros de los de otras cuentas.</p><p>El formulario completo de orientación prepara una solicitud en tu navegador y permite abrir tu aplicación de correo para enviarla; no envía ni almacena esos datos automáticamente. El formulario breve de inicio registra el correo y un folio únicamente cuando el servidor está disponible. Para limitar envíos repetidos se guarda temporalmente una huella del origen y la fecha, sin mostrar tu dirección IP a otros usuarios. Los reportes de anuncios se asocian a tu cuenta para su revisión.</p><h2>Acceso y corrección</h2><p>Puedes editar tu perfil y publicaciones, quitar favoritos o retirar anuncios desde tu cuenta. Para solicitar acceso, corrección o eliminación de otros datos, escribe al correo del proyecto indicando tu solicitud. Retirar un anuncio lo oculta del catálogo; no borra automáticamente su registro de la base de datos.</p><h2>Uso del catálogo</h2><p>Los anuncios marcados «Ejemplo» contienen precios, fotografías y ubicaciones ilustrativos: no son ofertas reales. Las demás publicaciones son información proporcionada por sus rentadores; Mi Cuarto UT no ha verificado su identidad ni el inmueble. Confirma personalmente condiciones, disponibilidad, costo total y documentos antes de llegar a un acuerdo. La plataforma no cobra rentas ni administra contratos.</p><h2>Publicaciones y fotografías</h2><p>Publica únicamente espacios que tengas autorización para ofrecer y fotografías con derechos de uso. Mantén precio y disponibilidad actualizados. No publiques documentos de identidad, contraseñas, datos bancarios o información personal de terceros. Puedes reportar contenido inexacto desde la ficha.</p><h2>Almacenamiento y acceso</h2><p>Los registros se guardan en una base SQLite del servidor y las fotografías en sus archivos. Las contraseñas se conservan mediante una función criptográfica con una sal individual; no se guardan como texto legible. La sesión del navegador caduca y puede cerrarse desde tu cuenta. La conexión pública actual del servidor es temporal y necesita que el equipo permanezca encendido.</p><p class="small-text muted">Información del proyecto actualizada el 20 de octubre de 2026. Campus, localidades y cobertura definitiva de operación siguen por confirmar.</p></article>`;
+  return `<article class="container page-shell narrow page-prose"><p class="breadcrumb"><a href="#/">Inicio</a> / Privacidad y términos</p><h1>Privacidad y uso de Mi Cuarto UT</h1><p>Mi Cuarto UT es un proyecto de Brian Garcia Rueda para facilitar la búsqueda y publicación de alojamiento universitario. Contacto del proyecto: <a href="https://www.instagram.com/micuartout/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Mi Cuarto UT">Instagram · @micuartout</a><a href="mailto:micuartout@gmail.com">micuartout@gmail.com</a>.</p><h2>Datos que se guardan</h2><p>Al completar tu perfil se guardan tu identificador de acceso, nombre, correo y perfil elegido. También se almacenan en el servidor tus favoritos de cuenta, publicaciones y las fotografías que subas. Sin iniciar sesión, los favoritos se conservan solo en localStorage de este navegador; puedes quitarlos individualmente o usar Vaciar favoritos. Los filtros se conservan en sessionStorage durante la navegación. Los datos de contacto del rentador solo se entregan a usuarios que han iniciado sesión. Tu identificador de acceso permite separar tus registros de los de otras cuentas.</p><p>El formulario completo de orientación prepara una solicitud en tu navegador y permite abrir tu aplicación de correo para enviarla; no envía ni almacena esos datos automáticamente. El formulario breve de inicio registra el correo y un folio únicamente cuando el servidor está disponible. Para limitar envíos repetidos se guarda temporalmente una huella del origen y la fecha, sin mostrar tu dirección IP a otros usuarios. Los reportes de anuncios se asocian a tu cuenta para su revisión.</p><h2>Acceso y corrección</h2><p>Puedes editar tu perfil y publicaciones, quitar favoritos o retirar anuncios desde tu cuenta. Para solicitar acceso, corrección o eliminación de otros datos, escribe al correo del proyecto indicando tu solicitud. Retirar un anuncio lo oculta del catálogo; no borra automáticamente su registro de la base de datos.</p><h2>Uso del catálogo</h2><p>Los anuncios marcados «Ejemplo» contienen precios, fotografías y ubicaciones ilustrativos: no son ofertas reales. Las demás publicaciones son información proporcionada por sus rentadores; Mi Cuarto UT no ha verificado su identidad ni el inmueble. Confirma personalmente condiciones, disponibilidad, costo total y documentos antes de llegar a un acuerdo. La plataforma no cobra rentas ni administra contratos.</p><h2>Publicaciones y fotografías</h2><p>Publica únicamente espacios que tengas autorización para ofrecer y fotografías con derechos de uso. Mantén precio y disponibilidad actualizados. No publiques documentos de identidad, contraseñas, datos bancarios o información personal de terceros. Puedes reportar contenido inexacto desde la ficha.</p><h2>Almacenamiento y acceso</h2><p>Los registros se guardan en una base SQLite del servidor y las fotografías en sus archivos. Las contraseñas se conservan mediante una función criptográfica con una sal individual; no se guardan como texto legible. La sesión del navegador caduca y puede cerrarse desde tu cuenta. La conexión pública actual del servidor es temporal y necesita que el equipo permanezca encendido.</p><p class="small-text muted">Información del proyecto actualizada el 20 de octubre de 2026. Campus, localidades y cobertura definitiva de operación siguen por confirmar.</p></article>`;
 }
 async function render() {
   const version = ++state.nav,
     path = routePath();
   renderHeader();
   renderFooter();
-  $("#contenido").innerHTML =
-    '<div class="container initial-loading"><span class="spinner"></span><p>Cargando espacios…</p></div>';
   let html;
   try {
     if (path === "/") html = home();
@@ -519,7 +527,7 @@ async function render() {
   if (version !== state.nav) return;
   $("#contenido").innerHTML =
     (state.offline
-      ? '<div class="container notice" role="status">Catálogo de ejemplo sin conexión al servidor. Para crear una cuenta, guardar datos o contactar, vuelve cuando el servicio esté disponible.</div>'
+      ? '<div class="container notice" role="status">Catálogo de ejemplo sin conexión al servidor. Puedes explorar, guardar favoritos en este navegador y preparar una consulta. Para acceder a tu cuenta o publicar, espera a que el servicio esté disponible.</div>'
       : "") + html;
   $("#cabecera").innerHTML = pageLinks($("#cabecera").innerHTML);
   $("#pie").innerHTML = pageLinks($("#pie").innerHTML);
@@ -650,7 +658,7 @@ document.addEventListener("click", async (event) => {
       sessionStorage.removeItem("mcut-session");
       state.user = null;
       state.profile = null;
-      state.favorites = new Set();
+      loadGuestFavorites();
       navigate("#/");
       await render();
     }
@@ -692,23 +700,21 @@ document.addEventListener("click", async (event) => {
         pageURL(state.map ? "/buscar?mapa=1" : "/buscar"),
       );
       await render();
+    } else if (action === "clear-favorites") {
+      state.favorites.clear();
+      const saved = saveGuestFavorites();
+      await render();
+      toast(saved ? "Se vaciaron tus favoritos de este navegador." : "Se vaciaron temporalmente; el navegador bloqueó el almacenamiento.", !saved);
     } else if (action === "favorite") {
-      if (!state.user) {
-        toast("Inicia sesión para guardar tus favoritos.");
-        navigate("#/registro");
-        return;
-      }
-      const id = el.dataset.id,
-        saved = !state.favorites.has(id);
-      await post("favorites", { id, saved });
+      const id = el.dataset.id;
+      const saved = !state.favorites.has(id);
+      if (state.user) await post("favorites", {id, saved});
       if (saved) state.favorites.add(id);
       else state.favorites.delete(id);
-      toast(
-        saved
-          ? "Espacio guardado en tus favoritos."
-          : "Espacio eliminado de favoritos.",
-      );
+      const persisted = state.user || saveGuestFavorites();
       await render();
+      toast(persisted ? saved ? state.user ? "Espacio guardado en tu cuenta." : "Espacio guardado en este navegador."
+        : "Espacio eliminado de favoritos." : "Favorito temporal: el navegador bloqueó el almacenamiento.", !persisted);
     } else if (action === "contact-owner") {
       el.disabled = true;
       const c = await api(
@@ -923,13 +929,25 @@ document.addEventListener("submit", async (event) => {
 });
 async function boot() {
   try {
+    const response = await fetch("catalogo-ejemplo.json");
+    if (response.ok) {
+      state.listings = await response.json();
+      state.offline = true;
+      loadGuestFavorites();
+      await render();
+    }
+  } catch {}
+  try {
     const [session, catalog] = await Promise.all([api("me"), api("listings")]);
+    state.offline = false;
     state.user = session.user;
     state.profile = session.profile;
     state.listings = catalog.listings;
     if (state.user) state.favorites = new Set((await api("favorites")).ids);
+    else loadGuestFavorites();
     await render();
   } catch (err) {
+    if (state.offline && state.listings.length) return;
     try {
       const response = await fetch("catalogo-ejemplo.json");
       if (!response.ok) throw err;
@@ -937,6 +955,7 @@ async function boot() {
       state.offline = true;
       state.user = null;
       state.profile = null;
+      loadGuestFavorites();
       await render();
       return;
     } catch {

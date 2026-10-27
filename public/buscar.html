@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0D3B66" />
+    <meta name="author" content="Brian Garcia Rueda" />
+    <meta
+      name="description"
+      content="Mi Cuarto UT: busca, compara y publica cuartos y departamentos para tu vida universitaria. Tu espacio, más cerca de la universidad."
+    />
+    <meta
+      property="og:title"
+      content="Mi Cuarto UT | Tu espacio, más cerca de la universidad"
+    />
+    <meta
+      property="og:description"
+      content="Un espacio para comenzar tu siguiente etapa universitaria. Compara alojamiento por precio, tamaño y servicios."
+    />
+    <meta property="og:type" content="website" />
+    <title>Buscar cuartos | Mi Cuarto UT</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="assets/Montserrat-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="assets/Montserrat-Bold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body data-route="/buscar">
+    <a class="skip" href="#contenido">Ir al contenido</a>
+    <svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <symbol id="i-search" viewBox="0 0 24 24">
+          <path d="m16 16 6 6M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0" />
+        </symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24">
+          <path d="m12 21-9-9C-3 5 7-1 12 6c5-7 15-1 9 6Z" />
+        </symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24">
+          <path d="M12 22s8-7 8-13A8 8 0 0 0 4 9c0 6 8 13 8 13Z" />
+          <circle cx="12" cy="9" r="3" />
+        </symbol>
+        <symbol id="i-home" viewBox="0 0 24 24">
+          <path d="m2 11 10-9 10 9M5 9v13h14V9M9 22v-8h6v8" />
+        </symbol>
+        <symbol id="i-bed" viewBox="0 0 24 24">
+          <path d="M2 21V7M2 16h20v5M2 11h17q3 0 3 3v2M5 7h5v4H5Z" />
+        </symbol>
+        <symbol id="i-size" viewBox="0 0 24 24">
+          <path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5M4 4l6 6M20 20l-6-6" />
+        </symbol>
+        <symbol id="i-wifi" viewBox="0 0 24 24">
+          <path d="M2 8q10-10 20 0M5 12q7-7 14 0M9 16q3-3 6 0M12 20h.1" />
+        </symbol>
+        <symbol id="i-book" viewBox="0 0 24 24">
+          <path d="M2 3h7l3 3 3-3h7v17h-7l-3 2-3-2H2ZM12 6v16" />
+        </symbol>
+        <symbol id="i-user" viewBox="0 0 24 24">
+          <circle cx="12" cy="7" r="5" />
+          <path d="M3 23v-4q0-6 9-6t9 6v4" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M3 12h17m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24">
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </symbol>
+        <symbol id="i-filter" viewBox="0 0 24 24">
+          <path d="M2 6h20M2 12h20M2 18h20M8 3v6M16 9v6M10 15v6" />
+        </symbol>
+        <symbol id="i-paw" viewBox="0 0 24 24">
+          <path
+            d="M7 10a2 3 0 1 1-4 0 2 3 0 0 1 4 0M12 5a2 3 0 1 1-4 0 2 3 0 0 1 4 0M18 5a2 3 0 1 1-4 0 2 3 0 0 1 4 0M23 10a2 3 0 1 1-4 0 2 3 0 0 1 4 0M6 19q-1-4 3-5l3-3 3 3q4 1 3 5-1 4-6 1-5 3-6-1Z"
+          />
+        </symbol>
+        <symbol id="i-map" viewBox="0 0 24 24">
+          <path d="m2 4 7-3 6 3 7-3v19l-7 3-6-3-7 3ZM9 1v19M15 4v19" />
+        </symbol>
+        <symbol id="i-lock" viewBox="0 0 24 24">
+          <path d="M6 10V7a6 6 0 0 1 12 0v3M4 10h16v13H4ZM12 15v4" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+          <path d="m4 12 5 5L20 5" />
+        </symbol>
+        <symbol id="i-upload" viewBox="0 0 24 24">
+          <path d="M12 16V2m-6 6 6-6 6 6M3 15v7h18v-7" />
+        </symbol>
+        <symbol id="i-bath" viewBox="0 0 24 24">
+          <path
+            d="M2 12h20v3q0 5-5 5H7q-5 0-5-5ZM5 12V5q0-3 4-3l2 2M8 4l4-2M6 20v2M18 20v2"
+          />
+        </symbol>
+        <symbol id="i-close" viewBox="0 0 24 24">
+          <path d="m5 5 14 14M19 5 5 19" />
+        </symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24">
+          <path d="M12 3v18M3 12h18" />
+        </symbol>
+      </defs>
+    </svg>
+    <header class="site-header" id="cabecera"><div class="container header-inner"><a class="brand" href="index.html" aria-label="Mi Cuarto UT, inicio"><svg class="brand-symbol" viewBox="370 280 520 390" aria-hidden="true"><image width="1254" height="1254" href="assets/logo_original.jpg"/></svg><span><strong>Mi Cuarto <span>UT</span></strong><small>Tu espacio, más cerca de la universidad.</small></span></a><nav class="nav-links" id="menu-principal" aria-label="Navegación principal"><a href="index.html" class="" >Inicio</a><a href="buscar.html" class="active" aria-current="page">Buscar cuartos</a><a href="publicar.html" class="" >Publicar</a><a href="nosotros.html" class="" >Nosotros</a><a href="contacto.html" class="" >Contacto</a><a class="mobile-only" href="cuenta.html">Iniciar sesión</a><a class="mobile-only" href="mis-publicaciones.html">Mis publicaciones</a></nav><div class="header-account"><a class="icon-button" href="favoritos.html" aria-label="Mis favoritos"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></a><a href="cuenta.html">Iniciar sesión</a><a class="btn navy" href="registro.html">Registrarse</a><button type="button" class="icon-button menu-toggle" aria-label="Abrir menú" aria-controls="menu-principal" aria-expanded="false" data-action="menu"><svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg></button></div></div></header>
+    <main id="contenido" tabindex="-1"><section class="container page-shell"><p class="breadcrumb"><a href="index.html">Inicio</a> / Buscar cuartos</p><h1>Encuentra un espacio a tu medida</h1><form data-form="search" class="search-toolbar"><label class="field"><span>Ubicación o palabra clave</span><input name="q" placeholder="Cerca de la universidad" value=""></label><label class="field"><span>Rango de precio</span><select name="max" aria-label="Renta máxima"><option value="">Presupuesto mensual</option><option value="1500" >Hasta $1,500</option><option value="2000" >Hasta $2,000</option><option value="2500" >Hasta $2,500</option><option value="3000" >Hasta $3,000</option><option value="3500" >Hasta $3,500</option><option value="5000" >Hasta $5,000</option><option value="10000" >Hasta $10,000</option></select></label><label class="field"><span>Tipo de espacio</span><select name="type"><option value="">Cuarto o departamento</option><option value="Cuarto" >Cuarto</option><option value="Departamento" >Departamento</option></select></label><button type="submit" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>Buscar espacios</button></form><div class="chips" aria-label="Filtros rápidos"><button type="button" class="chip active" aria-pressed="true" data-action="type" data-value="">Todos</button><button type="button" class="chip " aria-pressed="false" data-action="type" data-value="Cuarto">Cuartos</button><button type="button" class="chip " aria-pressed="false" data-action="type" data-value="Departamento">Departamentos</button><button type="button" class="chip " aria-pressed="false" data-action="amenity" data-value="Amueblado"><svg class="icon" aria-hidden="true"><use href="#i-bed"></use></svg>Amueblado</button><button type="button" class="chip " aria-pressed="false" data-action="amenity" data-value="Mascotas"><svg class="icon" aria-hidden="true"><use href="#i-paw"></use></svg>Acepta mascotas</button><button type="button" class="chip" data-action="filters"><svg class="icon" aria-hidden="true"><use href="#i-filter"></use></svg>Más filtros</button></div><div class="results-top"><div><h2>Explora los espacios</h2><p>6 resultados · Los anuncios de ejemplo no indican disponibilidad real.</p></div><div class="results-actions"><select class="sort-select" aria-label="Ordenar espacios" data-action="sort"><option value="recent" selected>Más recientes</option><option value="low" >Menor precio</option><option value="high" >Mayor precio</option></select><button type="button" class="btn small navy" data-action="view" data-view="list">Lista</button><button type="button" class="btn small outline" data-action="view" data-view="map"><svg class="icon" aria-hidden="true"><use href="#i-map"></use></svg>Mapa</button></div></div><div class="cards"><article class="listing-card"><div class="card-photo"><a href="alojamiento.html?id=demo-1"><svg class="demo-photo " viewBox="2 2 764 508" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Cuarto con área de estudio"><image width="1536" height="1024" href="assets/fotografias_ilustrativas.jpg"/></svg></a><span class="badge ">EJEMPLO</span><button type="button" class="favorite " data-action="favorite" data-id="demo-1" aria-label="Guardar en favoritos: Cuarto con área de estudio" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></button></div><div class="card-info"><div class="price"><strong>$2,800</strong><span>MXN / mes</span></div><h3><a href="alojamiento.html?id=demo-1">Cuarto con área de estudio</a></h3><div class="card-stats"><span><svg class="icon" aria-hidden="true"><use href="#i-bed"></use></svg>1 habitación</span><span><svg class="icon" aria-hidden="true"><use href="#i-size"></use></svg>18 m²</span></div><div class="card-bottom"><span><svg class="icon" aria-hidden="true"><use href="#i-wifi"></use></svg>Amueblado · Wi-Fi</span><a href="alojamiento.html?id=demo-1">Ver detalles <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div></div></article><article class="listing-card"><div class="card-photo"><a href="alojamiento.html?id=demo-2"><svg class="demo-photo " viewBox="770 2 764 508" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Estudio con cocina propia"><image width="1536" height="1024" href="assets/fotografias_ilustrativas.jpg"/></svg></a><span class="badge ">EJEMPLO</span><button type="button" class="favorite " data-action="favorite" data-id="demo-2" aria-label="Guardar en favoritos: Estudio con cocina propia" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></button></div><div class="card-info"><div class="price"><strong>$3,500</strong><span>MXN / mes</span></div><h3><a href="alojamiento.html?id=demo-2">Estudio con cocina propia</a></h3><div class="card-stats"><span><svg class="icon" aria-hidden="true"><use href="#i-bed"></use></svg>1 habitación</span><span><svg class="icon" aria-hidden="true"><use href="#i-size"></use></svg>28 m²</span></div><div class="card-bottom"><span><svg class="icon" aria-hidden="true"><use href="#i-home"></use></svg>Cocina · Baño privado</span><a href="alojamiento.html?id=demo-2">Ver detalles <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div></div></article><article class="listing-card"><div class="card-photo"><a href="alojamiento.html?id=demo-3"><svg class="demo-photo " viewBox="2 514 764 508" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Habitación compartida"><image width="1536" height="1024" href="assets/fotografias_ilustrativas.jpg"/></svg></a><span class="badge ">EJEMPLO</span><button type="button" class="favorite " data-action="favorite" data-id="demo-3" aria-label="Guardar en favoritos: Habitación compartida" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></button></div><div class="card-info"><div class="price"><strong>$2,200</strong><span>MXN / mes</span></div><h3><a href="alojamiento.html?id=demo-3">Habitación compartida</a></h3><div class="card-stats"><span><svg class="icon" aria-hidden="true"><use href="#i-bed"></use></svg>2 habitaciones</span><span><svg class="icon" aria-hidden="true"><use href="#i-size"></use></svg>24 m²</span></div><div class="card-bottom"><span><svg class="icon" aria-hidden="true"><use href="#i-wifi"></use></svg>Wi-Fi · Amueblado</span><a href="alojamiento.html?id=demo-3">Ver detalles <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div></div></article><article class="listing-card"><div class="card-photo"><a href="alojamiento.html?id=demo-4"><svg class="demo-photo " viewBox="770 514 764 508" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Cuarto luminoso amueblado"><image width="1536" height="1024" href="assets/fotografias_ilustrativas.jpg"/></svg></a><span class="badge ">EJEMPLO</span><button type="button" class="favorite " data-action="favorite" data-id="demo-4" aria-label="Guardar en favoritos: Cuarto luminoso amueblado" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></button></div><div class="card-info"><div class="price"><strong>$3,000</strong><span>MXN / mes</span></div><h3><a href="alojamiento.html?id=demo-4">Cuarto luminoso amueblado</a></h3><div class="card-stats"><span><svg class="icon" aria-hidden="true"><use href="#i-bed"></use></svg>1 habitación</span><span><svg class="icon" aria-hidden="true"><use href="#i-size"></use></svg>20 m²</span></div><div class="card-bottom"><span><svg class="icon" aria-hidden="true"><use href="#i-wifi"></use></svg>Escritorio · Wi-Fi</span><a href="alojamiento.html?id=demo-4">Ver detalles <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div></div></article><article class="listing-card"><div class="card-photo"><a href="alojamiento.html?id=demo-5"><svg class="demo-photo " viewBox="770 2 764 508" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Estudio para tu día a día"><image width="1536" height="1024" href="assets/fotografias_ilustrativas.jpg"/></svg></a><span class="badge ">EJEMPLO</span><button type="button" class="favorite " data-action="favorite" data-id="demo-5" aria-label="Guardar en favoritos: Estudio para tu día a día" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></button></div><div class="card-info"><div class="price"><strong>$3,800</strong><span>MXN / mes</span></div><h3><a href="alojamiento.html?id=demo-5">Estudio para tu día a día</a></h3><div class="card-stats"><span><svg class="icon" aria-hidden="true"><use href="#i-bed"></use></svg>1 habitación</span><span><svg class="icon" aria-hidden="true"><use href="#i-size"></use></svg>30 m²</span></div><div class="card-bottom"><span><svg class="icon" aria-hidden="true"><use href="#i-wifi"></use></svg>Cocina · Mascotas</span><a href="alojamiento.html?id=demo-5">Ver detalles <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div></div></article><article class="listing-card"><div class="card-photo"><a href="alojamiento.html?id=demo-6"><svg class="demo-photo " viewBox="2 2 764 508" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Habitación con escritorio"><image width="1536" height="1024" href="assets/fotografias_ilustrativas.jpg"/></svg></a><span class="badge ">EJEMPLO</span><button type="button" class="favorite " data-action="favorite" data-id="demo-6" aria-label="Guardar en favoritos: Habitación con escritorio" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-heart"></use></svg></button></div><div class="card-info"><div class="price"><strong>$2,600</strong><span>MXN / mes</span></div><h3><a href="alojamiento.html?id=demo-6">Habitación con escritorio</a></h3><div class="card-stats"><span><svg class="icon" aria-hidden="true"><use href="#i-bed"></use></svg>1 habitación</span><span><svg class="icon" aria-hidden="true"><use href="#i-size"></use></svg>17 m²</span></div><div class="card-bottom"><span><svg class="icon" aria-hidden="true"><use href="#i-wifi"></use></svg>Amueblado · Wi-Fi</span><a href="alojamiento.html?id=demo-6">Ver detalles <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div></div></article></div></section></main>
+    <footer id="pie" class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="index.html" aria-label="Mi Cuarto UT, inicio"><svg class="brand-symbol" viewBox="370 280 520 390" aria-hidden="true"><image width="1254" height="1254" href="assets/logo_original.jpg"/></svg><span><strong>Mi Cuarto <span>UT</span></strong><small>Tu espacio, más cerca de la universidad.</small></span></a><p>Un espacio para comenzar tu siguiente etapa universitaria.</p></div><div class="footer-col"><h3>Explora</h3><a href="buscar.html">Buscar cuartos</a><a href="favoritos.html">Guardar favoritos</a><a href="nosotros.html">Preguntas frecuentes</a></div><div class="footer-col"><h3>Para rentadores</h3><a href="publicar.html">Publicar inmueble</a><a href="mis-publicaciones.html">Mis publicaciones</a><a href="registro.html">Cómo funciona</a></div><div class="footer-col"><h3>Contacto y comunidad</h3><a href="contacto.html">Formulario de contacto</a><a href="https://www.instagram.com/micuartout/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Mi Cuarto UT">Instagram · @micuartout</a><a href="mailto:micuartout@gmail.com">micuartout@gmail.com</a><a href="privacidad.html">Privacidad y términos</a></div></div><div class="footer-bottom"><span>© 2026 Mi Cuarto UT · Brian Garcia Rueda</span><span>Los anuncios marcados «Ejemplo» contienen datos ilustrativos.</span></div></div></footer>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <dialog id="dialogo" aria-labelledby="dialog-title">
+      <button
+        type="button"
+        class="icon-button dialog-close"
+        data-action="close-dialog"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+      <div id="dialog-content"></div>
+    </dialog>
+    <noscript
+      ><div class="container notice">
+        Activa JavaScript para buscar espacios, guardar favoritos y publicar
+        inmuebles. Puedes escribir a micuartout@gmail.com para solicitar
+        información.
+      </div></noscript
+    >
+  </body>
+</html>

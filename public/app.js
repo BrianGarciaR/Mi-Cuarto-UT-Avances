@@ -76,19 +76,44 @@ const roles = {
   maestro: "Maestro",
   rentador: "Rentador",
 };
-const routePath = () =>
-  location.hash.startsWith("#/") ? location.hash.slice(1).split("?")[0] : "/";
+const pageFiles = {
+  "/": "index.html", "/buscar": "buscar.html", "/publicar": "publicar.html",
+  "/nosotros": "nosotros.html", "/contacto": "contacto.html",
+  "/favoritos": "favoritos.html", "/cuenta": "cuenta.html", "/registro": "registro.html",
+  "/mis-publicaciones": "mis-publicaciones.html", "/privacidad": "privacidad.html"
+};
+const routePath = () => document.body.dataset.route === "/alojamiento"
+  ? "/alojamiento/" + (new URLSearchParams(location.search).get("id") || "demo-1")
+  : document.body.dataset.route || "/";
+function pageURL(value) {
+  const route = value.replace(/^\/?#/, "");
+  if (!route.startsWith("/") || route.startsWith("//")) return value;
+  const [path, query = ""] = route.split("?");
+  if (path.startsWith("/alojamiento/"))
+    return "alojamiento.html?id=" + encodeURIComponent(decodeURIComponent(path.slice(13)));
+  return (pageFiles[path] || "index.html") + (query ? "?" + query : "");
+}
+const pageLinks = html => html.replace(/href="(?:\/)?#(\/[^" ]*)"/g,
+  (_, route) => `href="${esc(pageURL(route.replaceAll("&amp;", "&")))}"`);
+function navigate(route) {
+  try { sessionStorage.setItem("mcut-filters", JSON.stringify(state.filters)); } catch {}
+  location.assign(pageURL(route));
+}
+try {
+  const saved = JSON.parse(sessionStorage.getItem("mcut-filters") || "null");
+  if (saved && Array.isArray(saved.amenities)) state.filters = {...state.filters, ...saved};
+} catch {}
 const btn = (text, href, kind = "", ic = "") =>
-  `<a class="btn ${kind}" href="${esc(href)}">${ic ? icon(ic) : ""}${esc(text)}</a>`;
+  `<a class="btn ${kind}" href="${esc(pageURL(href))}">${ic ? icon(ic) : ""}${esc(text)}</a>`;
 const brand = () =>
-  `<a class="brand" href="#/" aria-label="Mi Cuarto UT, inicio"><svg class="brand-symbol" viewBox="370 280 520 390" aria-hidden="true"><image width="1254" height="1254" href="/assets/logo_original.jpg"/></svg><span><strong>Mi Cuarto <span>UT</span></strong><small>Tu espacio, más cerca de la universidad.</small></span></a>`;
+  `<a class="brand" href="#/" aria-label="Mi Cuarto UT, inicio"><svg class="brand-symbol" viewBox="370 280 520 390" aria-hidden="true"><image width="1254" height="1254" href="assets/logo_original.jpg"/></svg><span><strong>Mi Cuarto <span>UT</span></strong><small>Tu espacio, más cerca de la universidad.</small></span></a>`;
 function photo(value, alt = "", cls = "") {
   if (typeof value === "string")
     return `<img class="photo ${cls}" src="${esc(privatePhotoUrls.get(value) || (value.startsWith("/api/media/") ? API_ORIGIN + value : value))}" ${value.startsWith("/api/media/") ? `data-private-photo="${esc(value)}"` : ""} alt="${esc(alt)}" loading="lazy" decoding="async">`;
   const idx = Number(value?.demo ?? value ?? 0) % 4,
     sx = (idx % 2) * 768 + 2,
     sy = Math.floor(idx / 2) * 512 + 2;
-  return `<svg class="demo-photo ${cls}" viewBox="${sx} ${sy} 764 508" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(alt || "Habitación ilustrativa del catálogo de ejemplo")}"><image width="1536" height="1024" href="/assets/fotografias_ilustrativas.jpg"/></svg>`;
+  return `<svg class="demo-photo ${cls}" viewBox="${sx} ${sy} 764 508" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(alt || "Habitación ilustrativa del catálogo de ejemplo")}"><image width="1536" height="1024" href="assets/fotografias_ilustrativas.jpg"/></svg>`;
 }
 function mainPhoto(l) {
   return l.photos?.[0] ?? { demo: 0 };
@@ -134,6 +159,7 @@ function renderHeader() {
       ["/buscar", "Buscar cuartos"],
       ["/publicar", "Publicar"],
       ["/nosotros", "Nosotros"],
+      ["/contacto", "Contacto"],
     ]
       .map(
         ([p, t]) =>
@@ -240,8 +266,11 @@ function home() {
   const list = filtered();
   return `<section class="hero"><div class="container hero-inner"><div class="hero-copy"><p class="eyebrow">ALOJAMIENTO PARA TU VIDA UNIVERSITARIA</p><h1>Encuentra tu cuarto<br> ideal cerca de la UTTT.</h1><p>Compara cuartos y departamentos según tu presupuesto, ubicación y lo que necesitas para estudiar y vivir.</p><div class="hero-signals"><span>${icon("book")}Estudiantes y maestros</span><span>${icon("home")}Un espacio para cada etapa</span></div></div><div class="hero-photo">${photo({ demo: 0 }, "Habitación ilustrativa con escritorio y luz natural")}<div class="photo-overlay">${icon("pin")}<span><strong>Tu espacio, más cerca.</strong><small>Explora y encuentra lo que va contigo.</small></span></div></div></div></section><form class="container search-card" data-form="search"><p class="eyebrow">¿CÓMO ES TU CUARTO IDEAL?</p><div class="search-fields">${field("Rango de precio", "max", priceSelect())}${field("Tamaño", "area", `<select name="area" aria-label="Superficie mínima"><option value="">Cualquiera</option><option value="15">Desde 15 m²</option><option value="20">Desde 20 m²</option><option value="30">Desde 30 m²</option></select>`)}${field("Ubicación / gustos", "q", `<input name="q" aria-label="Buscar ubicación o característica" placeholder="Cerca de la universidad" value="${esc(state.filters.q)}">`)}${field("Características", "feature", `<select name="feature" aria-label="Características"><option value="">Mascotas / amueblado</option value="Mascotas">Acepta mascotas</option value="Amueblado">Amueblado</option value="Wi-Fi">Wi-Fi</option></select>`)}<button class="btn" type="submit">${icon("search")}Buscar</button></div></form><section class="container catalog" id="catalogo"><div class="section-top"><div><h2>Un lugar que se sienta tuyo</h2><p>Explora el catálogo y compara las opciones que más te interesen.</p></div>${btn("Ver mapa", "#/buscar?mapa=1", "outline", "map")}</div>${filterChips()}<p class="catalog-note">Catálogo de demostración · los precios, fotografías y características marcados «Ejemplo» son ilustrativos.</p><div class="cards">${cards(list.slice(0, 6))}</div><div class="center">${btn("Explorar más espacios", "#/buscar", "outline catalog-more", "arrow")}</div></section><section class="map-intro"><div class="container map-intro-grid"><div class="map-copy"><p class="eyebrow">TU PRÓXIMA ETAPA, MEJOR UBICADA</p><h2>Elige también<br>por ubicación.</h2><p>Consulta el mapa y compara opciones en un mismo lugar. La ubicación y los servicios te ayudan a elegir un espacio que se adapte a tu rutina.</p>${btn("Explorar en el mapa", "#/buscar?mapa=1", "navy", "map")}</div>${mapPanel()}</div></section>${aboutContent()}${faq()}<section class="container cta" id="contacto"><div><h2>¿Tienes un espacio en renta?</h2><p>Preséntalo a estudiantes y maestros. Agrega fotos, características y los datos de tu inmueble.</p>${btn("Quiero publicar", "#/publicar", "", "arrow")}</div><div><h3>¿Necesitas orientación?</h3>${contactForm()}</div></section>`;
 }
-function aboutContent() {
-  return `<section class="container about" id="nosotros"><h2>Mi Cuarto UT, pensado para tu vida universitaria.</h2><p>Nuestro propósito es acercar la búsqueda de alojamiento a estudiantes y maestros, y ofrecer a los rentadores un espacio para presentar sus inmuebles.</p><div class="benefits">${[
+function contactPage() {
+  return `<section class="container page-shell narrow"><h1>Hablemos de tu próxima etapa</h1><p class="page-description">Déjanos tu correo para solicitar orientación sobre Mi Cuarto UT.</p><div class="cta" style="display:block;width:100%;margin-inline:0">${contactForm()}</div></section>`;
+}
+function aboutContent(standalone = false) {
+  return `<section class="container about" id="nosotros"><${standalone ? "h1" : "h2"}>Mi Cuarto UT, pensado para tu vida universitaria.</${standalone ? "h1" : "h2"}><p>Nuestro propósito es acercar la búsqueda de alojamiento a estudiantes y maestros, y ofrecer a los rentadores un espacio para presentar sus inmuebles.</p><div class="benefits">${[
     [
       "filter",
       "Encuentra lo que necesitas",
@@ -321,7 +350,7 @@ function formControl(label, name, value = "", attrs = "", cls = "") {
 async function publishPage() {
   const gate = requireLandlord();
   if (gate) return gate;
-  const editId = new URLSearchParams(location.hash.split("?")[1] || "").get(
+  const editId = new URLSearchParams(location.search).get(
     "editar",
   );
   let l = null;
@@ -378,7 +407,7 @@ async function render() {
     if (path === "/") html = home();
     else if (path === "/buscar") {
       if (
-        new URLSearchParams(location.hash.split("?")[1] || "").get("mapa") ===
+        new URLSearchParams(location.search).get("mapa") ===
         "1"
       )
         state.map = true;
@@ -390,7 +419,7 @@ async function render() {
     else if (path === "/publicar") html = await publishPage();
     else if (path === "/mis-publicaciones") html = await managePage();
     else if (path === "/favoritos") html = favoritesPage();
-    else if (path === "/nosotros") html = aboutContent() + faq();
+    else if (path === "/nosotros") html = aboutContent(true) + faq();
     else if (path === "/contacto")
       html = `<section class="container page-shell narrow"><h1>Hablemos de tu próxima etapa</h1><p class="page-description">Déjanos tu correo para solicitar orientación sobre Mi Cuarto UT.</p><div class="cta" style="display:block;width:100%;margin-inline:0">${contactForm()}</div></section>`;
     else if (path === "/privacidad") html = privacyPage();
@@ -404,6 +433,9 @@ async function render() {
     (state.offline
       ? '<div class="container notice" role="status">Catálogo de ejemplo sin conexión al servidor. Para crear una cuenta, guardar datos o contactar, vuelve cuando el servicio esté disponible.</div>'
       : "") + html;
+  $("#cabecera").innerHTML = pageLinks($("#cabecera").innerHTML);
+  $("#pie").innerHTML = pageLinks($("#pie").innerHTML);
+  $("#contenido").innerHTML = pageLinks($("#contenido").innerHTML);
   void hydratePrivatePhotos();
   document.title =
     {
@@ -414,10 +446,13 @@ async function render() {
       "/cuenta": "Mi cuenta | Mi Cuarto UT",
       "/registro": "Crea tu perfil | Mi Cuarto UT",
       "/mis-publicaciones": "Mis publicaciones | Mi Cuarto UT",
+      "/nosotros": "Nosotros | Mi Cuarto UT",
+      "/contacto": "Contacto | Mi Cuarto UT",
+      "/privacidad": "Privacidad y términos | Mi Cuarto UT",
     }[path] || "Mi Cuarto UT";
 }
 function modal(html) {
-  $("#dialog-content").innerHTML = html;
+  $("#dialog-content").innerHTML = pageLinks(html);
   if (!$("#dialogo").open) $("#dialogo").showModal();
 }
 function closeModal() {
@@ -497,9 +532,9 @@ async function saveListing(draft = false) {
         : "Tu publicación quedó guardada.",
     );
     state.listings = (await api("listings")).listings;
-    location.hash = draft
+    navigate(draft
       ? "#/mis-publicaciones"
-      : "#/alojamiento/" + result.id;
+      : "#/alojamiento/" + result.id);
   } catch (err) {
     $("#publish-error").textContent = err.message;
     toast(err.message, true);
@@ -527,7 +562,7 @@ document.addEventListener("click", async (event) => {
       state.user = null;
       state.profile = null;
       state.favorites = new Set();
-      location.hash = "#/";
+      navigate("#/");
       await render();
     }
     return;
@@ -565,13 +600,13 @@ document.addEventListener("click", async (event) => {
       history.replaceState(
         null,
         "",
-        state.map ? "#/buscar?mapa=1" : "#/buscar",
+        pageURL(state.map ? "/buscar?mapa=1" : "/buscar"),
       );
       await render();
     } else if (action === "favorite") {
       if (!state.user) {
         toast("Inicia sesión para guardar tus favoritos.");
-        location.hash = "#/registro";
+        navigate("#/registro");
         return;
       }
       const id = el.dataset.id,
@@ -605,7 +640,7 @@ document.addEventListener("click", async (event) => {
     } else if (action === "report") {
       if (!state.user) {
         toast("Inicia sesión para enviar un reporte.");
-        location.hash = "#/cuenta";
+        navigate("#/cuenta");
         return;
       }
       modal(
@@ -642,8 +677,8 @@ document.addEventListener("click", async (event) => {
       }
     } else if (action === "go-publish") {
       sessionStorage.setItem("mcut-role", "rentador");
-      location.hash = "#/publicar";
-    } else if (action === "go-search") location.hash = "#/buscar";
+      navigate("#/publicar");
+    } else if (action === "go-search") navigate("#/buscar");
   } catch (err) {
     toast(err.message, true);
     el.disabled = false;
@@ -712,7 +747,7 @@ document.addEventListener("submit", async (event) => {
       )
         state.filters.amenities.push(String(data.get("feature")));
       if (routePath() === "/buscar") await render();
-      else location.hash = "#/buscar";
+      else navigate("#/buscar");
     } else if (kind === "filters") {
       state.filters.min = String(data.get("min") || "");
       state.filters.max = String(data.get("max") || "");
@@ -750,10 +785,9 @@ document.addEventListener("submit", async (event) => {
       state.user = result.user;
       state.profile = result.profile;
       state.favorites = new Set((await api("favorites")).ids);
-      location.hash =
-        state.profile?.role === "rentador"
+      navigate(state.profile?.role === "rentador"
           ? "#/mis-publicaciones"
-          : "#/favoritos";
+          : "#/favoritos");
       await render();
       toast("Tu cuenta está lista.");
     } else if (kind === "profile") {
@@ -764,10 +798,9 @@ document.addEventListener("submit", async (event) => {
       state.profile = result.profile;
       renderHeader();
       toast("Tu perfil quedó guardado.");
-      location.hash =
-        result.profile.role === "rentador"
+      navigate(result.profile.role === "rentador"
           ? "#/mis-publicaciones"
-          : "#/favoritos";
+          : "#/favoritos");
     } else if (kind === "publish") await saveListing(false);
     else if (kind === "report") {
       await post("reports", {
@@ -783,11 +816,6 @@ document.addEventListener("submit", async (event) => {
     if (submit) submit.disabled = false;
   }
 });
-window.addEventListener("hashchange", () => {
-  if ($("#dialogo").open) closeModal();
-  render();
-  window.scrollTo(0, 0);
-});
 async function boot() {
   try {
     const [session, catalog] = await Promise.all([api("me"), api("listings")]);
@@ -798,7 +826,7 @@ async function boot() {
     await render();
   } catch (err) {
     try {
-      const response = await fetch("/catalogo-ejemplo.json");
+      const response = await fetch("catalogo-ejemplo.json");
       if (!response.ok) throw err;
       state.listings = await response.json();
       state.offline = true;
@@ -812,7 +840,8 @@ async function boot() {
     renderHeader();
     renderFooter();
     $("#contenido").innerHTML =
-      `<section class="container page-shell"><h1>Mi Cuarto UT</h1><div class="notice error">${esc(err.message)}</div><p>Recarga la página para intentar de nuevo.</p><p class="small-text">Si estás abriendo los archivos en tu equipo, inicia el servidor con <code>npm run dev</code> como se indica en LEEME.md.</p></section>`;
+      `<section class="container page-shell"><h1>Mi Cuarto UT</h1><div class="notice error">${esc(err.message)}</div><p>Recarga la página para intentar de nuevo.</p></section>`;
   }
 }
-boot();
+if (location.hash.startsWith("#/")) navigate(location.hash);
+else boot();

@@ -98,7 +98,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible {
-  outline: 3px solid #00b894;
+  outline: 3px solid #007361;
   outline-offset: 4px;
 }
 img,
@@ -1244,7 +1244,7 @@ svg {
   border-color: var(--navy);
 }
 .role-option input:focus-visible + span {
-  outline: 3px solid var(--green);
+  outline: 3px solid #007361;
   outline-offset: 3px;
 }
 .form-control {
@@ -2772,6 +2772,9 @@ main:focus {
 .request-message { white-space: pre-wrap; overflow-wrap: anywhere; margin-bottom: 20px; }
 .guest-favorites-note { margin-bottom: 24px; }
 .container.notice { margin-inline: auto; }
+.btn:not(.navy):not(.outline):hover { color: #082b4a; }
+input[type="checkbox"], input[type="radio"] { accent-color: #007361; }
+.hero :focus-visible { outline-color: #40e3c0; }
 [hidden] { display: none !important; }
 @media (max-width: 767.98px) {
   .contact-page > .row { --bs-gutter-x: 24px; }

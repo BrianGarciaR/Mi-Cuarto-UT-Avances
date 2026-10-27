@@ -10,6 +10,7 @@
     "build": "node build.mjs",
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
-    "test": "node tests/api.mjs"
+    "test": "node tests/pages.mjs && node tests/run.mjs",
+    "test:pages": "node tests/pages.mjs"
   }
 }

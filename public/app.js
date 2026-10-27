@@ -428,9 +428,9 @@ function dashboardNav(active) {
 }
 function requireLandlord() {
   if (!state.user)
-    return `<section class="container page-shell">${empty("Publica tu espacio en Mi Cuarto UT", "Inicia sesión y elige el perfil Rentador para agregar tu inmueble.")}<div class="center section-space">${btn("Iniciar sesión y elegir perfil", "#/registro", "", "user")}</div></section>`;
+    return `<section class="container page-shell">${empty("Publica tu espacio en Mi Cuarto UT", "Inicia sesión y elige el perfil Rentador para agregar tu inmueble.").replace("<h2>", "<h1>").replace("</h2>", "</h1>")}<div class="center section-space">${btn("Iniciar sesión y elegir perfil", "#/registro", "", "user")}</div></section>`;
   if (state.profile?.role !== "rentador")
-    return `<section class="container page-shell">${empty("Un espacio para quien publica", "Para publicar, selecciona Rentador en tu perfil. Puedes cambiarlo cuando quieras.")}<div class="center section-space">${btn("Cambiar mi perfil", "#/registro", "", "user")}</div></section>`;
+    return `<section class="container page-shell">${empty("Un espacio para quien publica", "Para publicar, selecciona Rentador en tu perfil. Puedes cambiarlo cuando quieras.").replace("<h2>", "<h1>").replace("</h2>", "</h1>")}<div class="center section-space">${btn("Cambiar mi perfil", "#/registro", "", "user")}</div></section>`;
   return "";
 }
 function formControl(label, name, value = "", attrs = "", cls = "") {
@@ -837,6 +837,16 @@ document.addEventListener("input", event => {
     $("#message-count", form).textContent = `${event.target.value.length} / 1500 caracteres`;
   $("[data-request-result]", form).hidden = true;
   if (form.classList.contains("was-validated")) validateOrientationField(event.target, form);
+});
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+  const menu = $("#menu-principal");
+  if (menu?.classList.contains("open")) {
+    menu.classList.remove("open");
+    const button = $('[data-action="menu"]');
+    button.setAttribute("aria-expanded", "false");
+    button.focus();
+  }
 });
 document.addEventListener("submit", async (event) => {
   const form = event.target.closest("form[data-form]");

@@ -19,7 +19,7 @@ const origins = new Set([
   `http://127.0.0.1:${port}`,
   `http://localhost:${port}`,
 ]);
-createServer(async (req, res) => {
+const server = createServer(async (req, res) => {
   try {
     const origin = req.headers.origin;
     if (origin && origins.has(origin)) {
@@ -125,6 +125,9 @@ createServer(async (req, res) => {
       JSON.stringify({ error: "Ocurrió un problema. Inténtalo de nuevo." }),
     );
   }
-}).listen(port, "127.0.0.1", () =>
-  console.log("Mi Cuarto UT listo en http://127.0.0.1:" + port),
-);
+}).listen(port, "127.0.0.1", () => {
+  const actualPort = server.address().port;
+  origins.add(`http://127.0.0.1:${actualPort}`);
+  origins.add(`http://localhost:${actualPort}`);
+  console.log("Mi Cuarto UT listo en http://127.0.0.1:" + actualPort);
+});

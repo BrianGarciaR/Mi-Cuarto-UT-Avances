@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 const origin=process.env.MCUT_TEST_ORIGIN || 'http://127.0.0.1:8790';
 assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
 let cookie='';let checks=0;

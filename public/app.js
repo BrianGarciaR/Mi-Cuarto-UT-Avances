@@ -127,6 +127,8 @@ function toast(text, error = false) {
   toast.timer = setTimeout(() => (el.hidden = true), 6000);
 }
 async function api(path, options = {}) {
+  if (state.offline && options.method && !["GET", "HEAD"].includes(options.method))
+    throw new Error("El servicio no está disponible. Puedes explorar el catálogo y preparar tu consulta desde Contacto.");
   const response = await fetch(API_ORIGIN + "/api/" + path, {
     signal: AbortSignal.timeout(8000),
     credentials: API_ORIGIN ? "omit" : "same-origin",
@@ -499,6 +501,7 @@ async function render() {
     path = routePath();
   renderHeader();
   renderFooter();
+  try { sessionStorage.setItem("mcut-filters", JSON.stringify(state.filters)); } catch {}
   let html;
   try {
     if (path === "/") html = home();

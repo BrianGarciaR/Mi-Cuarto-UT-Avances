@@ -1,11 +1,11 @@
 @font-face {
-  font-family: Montserrat;
+  font-family: "Montserrat Local";
   src: url("assets/Montserrat-Regular.ttf") format("truetype");
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: Montserrat;
+  font-family: "Montserrat Local";
   src: url("assets/Montserrat-Bold.ttf") format("truetype");
   font-weight: 600 900;
   font-display: swap;
@@ -32,7 +32,7 @@ body {
   background: #fff;
   color: var(--dark);
   font:
-    400 14px/1.6 Montserrat,
+    400 14px/1.6 Montserrat, "Montserrat Local",
     Arial,
     sans-serif;
 }
@@ -123,6 +123,7 @@ svg {
   overflow: hidden;
 }
 .container {
+  padding-inline: 0;
   width: calc(100% - 128px);
   max-width: 1312px;
   margin-inline: auto;
@@ -2706,4 +2707,45 @@ main:focus {
     margin-top: 22px;
     margin-bottom: 20px;
   }
+}
+
+.cards.row { --bs-gutter-x: 32px; display: flex; gap: 0; row-gap: 24px; margin-inline: -16px; }
+.listing-col { min-width: 0; }
+.listing-col .listing-card { height: 100%; }
+.cards.row > .empty { padding-inline: 16px; width: 100%; }
+.map-results .cards.row { --bs-gutter-x: 24px; gap: 0; row-gap: 24px; margin-inline: -12px; }
+.map-results .listing-col { width: 100%; }
+.hero { height: auto; }
+.hero-inner { display: block; padding-bottom: 72px; }
+.hero-inner > .row { --bs-gutter-x: 40px; row-gap: 28px; }
+.hero-copy { min-width: 0; }
+.hero-visual { min-width: 0; }
+.hero .eyebrow { color: #40e3c0; }
+.hero-signals .icon { color: #40e3c0; }
+.eyebrow { color: #007361; }
+.about h1 { max-width: 900px; margin-inline: auto; }
+.nav-links { gap: 22px; }
+.header-inner { gap: 22px; }
+.site-header .brand small { font-size: 9px; }
+.site-header .brand strong { font-size: 23px; }
+.header-account { gap: 16px; }
+.header-account .btn { padding-inline: 16px; }
+.site-footer a, .page-prose a { overflow-wrap: anywhere; }
+@media (min-width: 768px) {
+  .map-results .listing-col { width: 50%; }
+  .hero-inner > .row { --bs-gutter-x: 56px; }
+}
+@media (max-width: 1100px) {
+  .header-inner { gap: 16px; }
+  .nav-links { gap: 16px; }
+  .nav-links a { font-size: 12px; }
+}
+@media (max-width: 767.98px) {
+  .hero-inner { padding-bottom: 64px; }
+  .hero-photo { height: 250px; }
+  .hero-copy h1 { font-size: clamp(28px, 6vw, 42px); }
+  .hero-copy h1 br { display: none; }
+  .hero-signals { flex-wrap: wrap; gap: 12px 20px; margin-top: 20px; }
+  .hero-inner > .row { --bs-gutter-x: 24px; }
+  .cards.row { --bs-gutter-x: 24px; margin-inline: -12px; }
 }

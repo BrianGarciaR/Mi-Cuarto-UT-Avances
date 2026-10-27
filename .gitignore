@@ -1,0 +1,8 @@
+data/
+datos-pruebas*/
+node_modules/
+.env*
+*.log
+*.sqlite-wal
+*.sqlite-shm
+tests/pruebas-api.json
